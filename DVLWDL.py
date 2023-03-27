@@ -229,8 +229,7 @@ class DVLWDL(BaseEstimator, UnivariateTransformerMixin):
             Document-term matrix with relevant features only.
 
         """
-        check_is_fitted(self, ['_relevant_features_list', '_sfa_list',
-                               '_vectorizer_list', 'vocabulary_'])
+        check_is_fitted(self, ['_sfa_list', 'TfIdfWordDict', 'last_vectorizer'])
 
         X = check_array(X, dtype='float64')
 
