@@ -16,10 +16,10 @@ from math import ceil
 
 class DVLWDL(BaseEstimator, UnivariateTransformerMixin):
     def __init__(self, word_size=4, n_bins=4,
-                 window_sizes=[70, 20, 30], window_steps=[70, 20, 30],
+                 window_sizes=[70, 20, 30], window_steps=[1, 1, 1],
                  anova=True, drop_sum=True, norm_mean=True, norm_std=True,
                  strategy='entropy', chi2_threshold=2, sparse=True,
-                 alphabet=None, skip = 1, theta = 1,minF=4,maxF=10,delta=10):
+                 alphabet=None, skip = 1, theta = 3,minF=4,maxF=10,delta=2):
         self.word_size = word_size
         self.n_bins = n_bins
         self.window_sizes = window_sizes
@@ -179,7 +179,8 @@ class DVLWDL(BaseEstimator, UnivariateTransformerMixin):
                     # Adding the unigrams
                     self.WordList.append((words[j], y[i], idx)) # We store the word, the class and the index of the window
                     # Adding the skipgrams, taking non-overlapping windows
-                    for k in range(0, j-1,ceil(window_size/window_step)):
+                    first_skip_gram_idx = max(j- self.skip * ceil(window_size/window_step) - 1, 0)
+                    for k in range(j-1, first_skip_gram_idx, -ceil(window_size/window_step)):
                         skip_gram_word = '&'.join([words[k], words[j]])
                         self.X_word_list[i].append(skip_gram_word)
                         self.WordList.append((skip_gram_word, y[i], idx))
