@@ -265,7 +265,8 @@ class DVLWDL(BaseEstimator, UnivariateTransformerMixin):
             for i, words in enumerate(X_word):
                 for j in range(len(words)):
                     # Adding the skipgrams, taking non-overlapping windows
-                    for k in range(0, j-1,ceil(window_size/window_step)):
+                    first_skip_gram_idx = max(j- self.skip * ceil(window_size/window_step) - 1, 0)
+                    for k in range(j-1, first_skip_gram_idx, -ceil(window_size/window_step)):
                         skip_gram_word = '&'.join([words[k], words[j]])
                         X_word_list[i].append(skip_gram_word)
         
@@ -347,7 +348,8 @@ class DVLWDL(BaseEstimator, UnivariateTransformerMixin):
                     # Adding the unigrams
                     self.WordList.append((words[j], y[i], idx)) # We store the word, the class and the index of the window
                     # Adding the skipgrams, taking non-overlapping windows
-                    for k in range(0, j-1,ceil(window_size/window_step)):
+                    first_skip_gram_idx = max(j- self.skip * ceil(window_size/window_step) - 1, 0)
+                    for k in range(j-1, first_skip_gram_idx, -ceil(window_size/window_step)):
                         skip_gram_word = '&'.join([words[k], words[j]])
                         self.X_word_list[i].append(skip_gram_word)
                         self.WordList.append((skip_gram_word, y[i], idx))
